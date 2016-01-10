@@ -14,6 +14,11 @@ function start(route, handle) {
             postData = '';
 
         request.setEncoding('utf8');
+        response.setHeader('Access-Control-Allow-Origin', '*');
+        response.setHeader('Access-Control-Request-Method', '*');
+        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+        response.setHeader('Access-Control-Allow-Headers', '*');
+        response.setHeader('content-type', 'text/plain');
 
         request.addListener('data', function(postDataChunk) {
             postData += postDataChunk;
