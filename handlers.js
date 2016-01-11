@@ -7,6 +7,8 @@ var config = require('./config'),
     sys = require('sys'),
     exec = require('child_process').exec;
 
+var uploadAWS = require('./upload');
+
 function home(response) {
     response.writeHead(200, {
         'Content-Type': 'text/html'
@@ -17,6 +19,10 @@ function home(response) {
 // this function uploads files
 
 function upload(response, postData) {
+
+  console.log("Uploading!!");
+
+
     var files = JSON.parse(postData);
 
     // writing audio file to disk
@@ -96,7 +102,7 @@ function hasMediaType(type) {
     ['audio/wav', 'audio/ogg', 'video/webm', 'video/mp4'].forEach(function(t) {
       if(t== type) isHasMediaType = true;
     });
-    
+
     return isHasMediaType;
 }
 
@@ -130,11 +136,14 @@ function ifWin(response, files) {
 }
 
 function ifMac(response, files) {
+
+    console.log("Merging!");
+
     // its probably *nix, assume ffmpeg is available
     var audioFile = __dirname + '/uploads/' + files.audio.name;
     var videoFile = __dirname + '/uploads/' + files.video.name;
     var mergedFile = __dirname + '/uploads/' + files.audio.name.split('.')[0] + '-merged.webm';
-    
+
     var util = require('util'),
         exec = require('child_process').exec;
 
@@ -154,7 +163,10 @@ function ifMac(response, files) {
             response.writeHead(200, {
                 'Content-Type': 'application/json'
             });
+            var fileName = files.audio.name.split('.')[0] + '-merged.webm';
+            var key = files.audio.name.split('.')[0];
             response.end(files.audio.name.split('.')[0] + '-merged.webm');
+            uploadAWS.uploadFile('uploads/'+fileName,key+".webm");
 
             // removing audio/video files
             fs.unlink(audioFile);

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.2.28",
     "recordrtc-nodejs": "^1.0.0"
   }
 }
