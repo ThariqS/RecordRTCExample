@@ -166,7 +166,9 @@ function ifMac(response, files) {
             var fileName = files.audio.name.split('.')[0] + '-merged.webm';
             var key = files.audio.name.split('.')[0];
             response.end(files.audio.name.split('.')[0] + '-merged.webm');
-            uploadAWS.uploadFile('uploads/'+fileName,key+".webm");
+            if (config.s3_enabled) {
+              uploadAWS.uploadFile('uploads/'+fileName,key+".webm");
+            }
 
             // removing audio/video files
             fs.unlink(audioFile);
