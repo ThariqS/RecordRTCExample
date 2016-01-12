@@ -13,9 +13,9 @@ var S3_BUCKET = process.env.S3_BUCKET || config.s3.bucket;
 
 AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 
-var s3obj = new AWS.S3(
-	{params:
-		{Bucket: S3_BUCKET}});
+var s3obj = new AWS.S3({
+	params: { Bucket: S3_BUCKET }
+});
 
 
 
@@ -23,11 +23,13 @@ module.exports.uploadFile = function(fileName,key) {
 
 		console.log('uploading!');
 
-		// var body = fs.createReadStream(fileName).pipe(zlib.createGzip());
-		//var body = fs.createReadStream(fileName);
-		var body = fs.readFileSync(fileName, "utf8");
+		var body = fs.createReadStream(fileName);
 
-		s3obj.upload({Body: body,Key: key})
+		s3obj.upload({
+			Body: body,
+			Key: key,
+			ContentType: 'video/webm'
+		})
 		.on('httpUploadProgress', function(evt) { console.log(evt); })
 		.send(function(err, data) {
 			console.log("Uploaded!");
